@@ -1,37 +1,22 @@
-import React from "react";
-
-import classes from "./CartItem.module.css";
-import Button from "../UI/Button";
-import { Container, Row, Col } from "react-bootstrap";
+import classes from './cartitem.module.css';
 
 const CartItem = (props) => {
-  return (
-    <React.Fragment>
-      <Container>
-        <Row>
-          <div className={classes.div}>
-            <Col>
-              <img src={props.item.imageUrl} alt="Music Album" />
-            </Col>
+const price = `$${props.price.toFixed(2)}`;
 
-            <Col>
-              <span>{props.item.title}</span>
-            </Col>
-            <Col>
-              <span>${props.item.price}</span>
-            </Col>
-            <Col>
-              <div className={classes.cartQuantity}>{props.item.quantity}</div>
-            </Col>
-            <Col>
-              <div>
-                <Button title="REMOVE" />
-              </div>
-            </Col>
-          </div>
-        </Row>
-      </Container>
-    </React.Fragment>
+  return (
+    <li className={classes['cart-item']}>
+      <div>
+        <h2>{props.name}</h2>
+        <div className={classes.summary}>
+          <span className={classes.price}>{price}</span>
+          <span className={classes.amount}>x {props.amount}</span>
+        </div>
+      </div>
+      <div className={classes.actions}>
+        <button onClick={props.onRemove}>−</button>
+        <button onClick={props.onAdd}>+</button>
+      </div>
+    </li>
   );
 };
 

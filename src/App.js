@@ -1,59 +1,29 @@
-import './App.css';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import Section from './components/Section/Section';
+import { useState } from 'react';
 
-const productsArr = [
+import Header from './components/Layouts/Header';
+import Meals from './components/Meals/Meals';
+import Cart from './components/Cart/Cart';
+import CartProvider from './sources/cartProvider';
 
-  {
-  
-  title: 'Colors',
-  
-  price: 100,
-  
-  imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%201.png',
-  
-  },
-  
-  {
-  
-  title: 'Black and white Colors',
-  
-  price: 50,
-  
-  imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%202.png',
-  
-  },
-  
-  {
-  
-  title: 'Yellow and Black Colors',
-  
-  price: 70,
-  
-  imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%203.png',
-  
-  },
-  
-  {
-  
-  title: 'Blue Color',
-  
-  price: 100,
-  
-  imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%204.png',
-  
-  }
-  
-  ]
-  
 function App() {
+  const [cartIsShown, setCartIsShown] = useState(false);
+
+  const showCartHandler = () => {
+    setCartIsShown(true);
+  };
+
+  const hideCartHandler = () => {
+    setCartIsShown(false);
+  };
+
   return (
-    <>
-<Header/>
-<Section productList={productsArr}/>
-<Footer/>
-    </>
+    <CartProvider>
+      {cartIsShown && <Cart onClose={hideCartHandler} />}
+      <Header onShowCart={showCartHandler} />
+      <main>
+        <Meals />
+      </main>
+    </CartProvider>
   );
 }
 

@@ -1,77 +1,53 @@
-import React from 'react';
-import { Col, Container,Row } from 'react-bootstrap';
-import ReactDOM from 'react-dom';
+import { useContext } from 'react';
 
-import classes from './Cart.module.css';
-// import Modal from '../UI/Modal';
+import Modal from '../UI/Modal';
 import CartItem from './CartItem';
+import classes from './Cart.module.css';
+import CartContext from '../../sources/cart-context';
 
-const Cart = () => {
-  const cartElements = [
-    {
-      title: 'Colors',
-      price: 100,
-      imageUrl:
-        'https://prasadyash2411.github.io/ecom-website/img/Album%201.png',
-      quantity: 2,
-    },
+const Cart = (props) => {
+  const cartCtx = useContext(CartContext);
 
-    {
-      title: 'Black and white Colors',
-      price: 50,
-      imageUrl:
-        'https://prasadyash2411.github.io/ecom-website/img/Album%202.png',
-      quantity: 3,
-    },
+  const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+  const hasItems = cartCtx.items.length > 0;
 
-    {
-      title: 'Yellow and Black Colors',
-      price: 70,
-      imageUrl:
-        'https://prasadyash2411.github.io/ecom-website/img/Album%203.png',
-      quantity: 1,
-    },
-  ];
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
 
-  const cartItemList = cartElements.map((item) => (
-    <CartItem key={Math.random().toString()} item={item} />
-  ));
+  const cartItemAddHandler = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
 
-  const root = document.getElementById('cartModal');
+  const cartItems = (
+    <ul className={classes['cart-items']}>
+      {cartCtx.items.map((item) => (
+        <CartItem
+          key={item.id}
+          name={item.name}
+          amount={item.amount}
+          price={item.price}
+          onRemove={cartItemRemoveHandler.bind(null, item.id)}
+          onAdd={cartItemAddHandler.bind(null, item)}
+        />
+      ))}
+    </ul>
+  );
 
-  return ReactDOM.createPortal(
-    
-    <div className={classes.overlay}>
-<span className={classes.title}>CART</span>
-      <button className={classes.delete}>X</button>
-      <div>
-      <Container>
-        <Row>
-          <Col>
-      
-        <span className={classes.item}>ITEM</span>
-        </Col><Col>
-        <span className={classes.price}>PRICE</span></Col>
-        <Col>
-        <span className={classes.quantity}>QUANTITY</span></Col>
-        <Col>
-
-      {cartItemList}
-      </Col>
-      </Row>
-      </Container>
-      </div>
-
+  return (
+    <Modal onClose={props.onClose}>
+      {cartItems}
       <div className={classes.total}>
-        <span>
-        <span>$25.99</span>
-
-        <span>Total</span>
-        </span>
+        <span>Total Amount</span>
+        <span>{totalAmount}</span>
       </div>
-      <button className={classes.button}>PURCHASE</button>
-    </div>,
-    root
+      <div className={classes.actions}>
+        <button className={classes['button--alt']} onClick={props.onClose}>
+          Close
+        </button>
+        {hasItems && <button className={classes.button}>Order</button>}
+      </div>
+    </Modal>
   );
 };
 
